@@ -10,6 +10,7 @@ import {
   ValidatorConstraint,
   ValidatorConstraintInterface,
 } from 'class-validator';
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
 @ValidatorConstraint({ name: 'TimeRangeValidator', async: false })
 class TimeRangeValidator implements ValidatorConstraintInterface {
@@ -35,16 +36,35 @@ class TimeRangeValidator implements ValidatorConstraintInterface {
 }
 
 export class QueryOutagesDto {
+  @ApiProperty({
+    description: 'Type of outage to query.',
+    enum: OutageType,
+    example: OutageType.led_outage,
+  })
   @IsEnum(OutageType)
   type: OutageType;
 
+  @ApiProperty({
+    description: 'Inclusive ISO-8601 timestamp marking the start of the search window.',
+    format: 'date-time',
+    example: '2025-01-15T00:00:00.000Z',
+  })
   @IsISO8601({ strict: true })
   start: string;
 
+  @ApiProperty({
+    description: 'Inclusive ISO-8601 timestamp marking the end of the search window.',
+    format: 'date-time',
+    example: '2025-01-15T01:00:00.000Z',
+  })
   @IsISO8601({ strict: true })
   @Validate(TimeRangeValidator)
   end: string;
 
+  @ApiPropertyOptional({
+    description: 'Filter outages for a specific controller.',
+    example: 'AOT1D-25090001',
+  })
   @IsOptional()
   @Transform(({ value }) => (typeof value === 'string' ? value.trim() : value))
   @IsString()

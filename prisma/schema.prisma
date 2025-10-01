@@ -22,11 +22,9 @@ enum OutageType {
 model rawOutages {
   id             BigInt      @id @default(autoincrement())
   controllerId   String      @db.VarChar(64) @map("controller_id")
-  outageType     OutageType  @map("outage_type")
-  reportedAt     DateTime    @db.Timestamptz(6) @map("reported_at")
+  tventType      OutageType  @map("tvent_type")
+  timestamp      BigInt
 
-  @@index([controllerId, outageType, reportedAt], name: "idx_ct_at")
-  @@unique([controllerId, outageType, reportedAt], name: "uniq_raw_outage")
   @@map("raw_outages")
 }
 

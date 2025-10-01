@@ -1,6 +1,6 @@
 # Outage Aggregator
 
-A NestJS service that ingests raw controller outage telemetry, aggregates consecutive readings into outage events, and exposes a query API. The implementation follows the requirements in **Interview Assignment_V2 (1).pdf**.
+A NestJS service that ingests raw controller outage telemetry, aggregates consecutive readings into outage events, and exposes a query API.
 
 ## Architecture
 - **API**: NestJS (HTTP + RabbitMQ microservice).
@@ -9,7 +9,7 @@ A NestJS service that ingests raw controller outage telemetry, aggregates consec
 - **Services**: `IngestController` enqueues raw events, `IngestConsumer` performs aggregation, `OutagesController` exposes queries.
 
 ### Aggregation Highlights
-- Raw events are deduplicated with a composite unique key (`controllerId`, `outageType`, `reportedAt`).
+- Raw events are deduplicated with a composite unique key (`controller_id`, `tvent_type`, `timestamp`).
 - Consecutive events are merged when their timestamps are within the configured gap, regardless of arrival order.
 - Start and end timestamps expand backward or forward when late samples arrive.
 - Queries return events whose time window overlaps the requested range.
@@ -55,11 +55,12 @@ OpenAPI documentation is available in [`docs/openapi.yaml`](docs/openapi.yaml). 
   curl -X POST http://localhost:3000/ingest \
     -H 'Content-Type: application/json' \
     -d '{
-      "controllerId": "AOT1D-25090001",
-      "outageType": "led_outage",
-      "reportedAt": "2025-01-15T07:43:00Z"
+      "controller_id": "AOT1D-25090001",
+      "tvent_type": "led_outage",
+      "timestamp": 1756665796
     }'
   ```
+- `timestamp` accepts Unix seconds or milliseconds; values in seconds are automatically converted.
 - `GET /outages`
   ```bash
   curl 'http://localhost:3000/outages?type=led_outage&start=2025-01-15T00:00:00Z&end=2025-01-16T00:00:00Z'

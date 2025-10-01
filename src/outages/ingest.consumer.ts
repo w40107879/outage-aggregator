@@ -15,8 +15,8 @@ export class IngestConsumer {
     try {
       await this.outageService.ingestRawAndAggregate({
         controllerId: data.controllerId,
-        outageType: data.outageType as OutageType,
-        reportedAt: new Date(data.reportedAt),
+        tventType: data.tventType as OutageType,
+        timestamp: data.timestamp,
       });
 
       channel.ack(msg);

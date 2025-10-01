@@ -22,6 +22,7 @@
     "db:push": "npx prisma db push",
     "db:pull": "npx prisma db pull",
     "db:migrate": "npx prisma migrate dev",
+    "db:migrate:reset": "npx prisma migrate reset",
     "db:migrate:deploy": "npx prisma migrate deploy",
     "db:migrate:status": "npx prisma migrate status"
   },
@@ -33,6 +34,8 @@
     "@nestjs/platform-express": "^11.0.1",
     "@nestjs/swagger": "^11.2.0",
     "@prisma/client": "^6.16.3",
+    "amqp-connection-manager": "^5.0.0",
+    "amqplib": "^0.10.9",
     "class-transformer": "^0.5.1",
     "class-validator": "^0.14.2",
     "prisma": "^6.16.3",
