@@ -1,0 +1,26 @@
+version: '3.9'
+services:
+  db:
+    image: postgres:16
+    container_name: outage-postgres
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: outages
+    ports:
+      - "5432:5432"
+    volumes:
+      - db_data:/var/lib/postgresql/data
+      - ./init:/docker-entrypoint-initdb.d:ro
+
+  rabbit:
+    image: rabbitmq:3-management
+    container_name: outage-rabbit
+    restart: always
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+
+volumes:
+  db_data:
