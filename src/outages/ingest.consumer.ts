@@ -21,8 +21,8 @@ export class IngestConsumer {
 
       channel.ack(msg);
     } catch (e) {
-      // 視需求：重試/丟 DLQ
-      channel.nack(msg, false, false); // 不重入列 → 走 DLQ（需在 Rabbit 設 DLX）
+      // don't requeue message
+      channel.nack(msg, false, false);
     }
   }
 }

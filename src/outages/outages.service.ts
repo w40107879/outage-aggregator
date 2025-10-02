@@ -16,6 +16,11 @@ type FindArgs = {
 export class OutagesService {
   constructor(private readonly prisma: PrismaService) {}
 
+  /**
+   * Finds outages based on the provided criteria.
+   * @param args The criteria for finding outages.
+   * @returns A list of matching outages.
+   */
   async find(args: FindArgs) {
     return this.prisma.aggregatedOutages.findMany({
       where: {
@@ -30,6 +35,11 @@ export class OutagesService {
     });
   }
 
+  /**
+   * Ingests a raw outage record and aggregates it.
+   * @param record The raw outage record to ingest.
+   * @returns The ID of the aggregated outage.
+   */
   async ingestRawAndAggregate(record: {
     controllerId: string;
     tventType: OutageType;

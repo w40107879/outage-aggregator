@@ -75,10 +75,19 @@ OpenAPI documentation is available in [`docs/openapi.yaml`](docs/openapi.yaml). 
 
 ## Testing
 
-- Unit tests:
+- Unit tests (Jest, Prisma mocked):
   ```bash
   pnpm test
   ```
+- Run a specific suite (example):
+  ```bash
+  pnpm test src/outages/outages.service.spec.ts
+  ```
+- End-to-end tests (requires PostgreSQL + RabbitMQ from Docker compose):
+  ```bash
+  pnpm test:e2e
+  ```
+  The e2e suite resets `raw_outages` and `aggregated_outages` tables between cases and reruns migrations on startup, so ensure the database defined in `DATABASE_URL` is disposable for test runs.
 
 ## Assumptions & Notes
 
