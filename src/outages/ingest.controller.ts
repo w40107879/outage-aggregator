@@ -1,6 +1,12 @@
 import { Body, Controller, Inject, OnModuleInit, Post } from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
-import { ApiBadRequestResponse, ApiBody, ApiCreatedResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
+import {
+  ApiBadRequestResponse,
+  ApiBody,
+  ApiCreatedResponse,
+  ApiOperation,
+  ApiTags,
+} from '@nestjs/swagger';
 import { lastValueFrom } from 'rxjs';
 
 import { IngestDto, IngestResponseDto } from './dto/ingest.dto';
@@ -15,7 +21,10 @@ export class IngestController implements OnModuleInit {
   }
 
   @ApiOperation({ summary: 'Enqueue a raw outage event for aggregation.' })
-  @ApiBody({ description: 'Raw outage payload emitted by edge controllers.', type: IngestDto })
+  @ApiBody({
+    description: 'Raw outage payload emitted by edge controllers.',
+    type: IngestDto,
+  })
   @ApiCreatedResponse({
     description: 'The outage sample was accepted and queued for processing.',
     type: IngestResponseDto,

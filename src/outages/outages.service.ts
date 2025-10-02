@@ -75,7 +75,7 @@ export class OutagesService {
 
         if (current) {
           // avoid earlier event is delay, still need to check if should extend
-          const occursBefore = eventTime < current.startTime; 
+          const occursBefore = eventTime < current.startTime;
           const occursAfter = eventTime > current.endTime;
 
           // check if should extend current outage window

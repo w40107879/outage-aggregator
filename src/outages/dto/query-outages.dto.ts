@@ -45,7 +45,8 @@ export class QueryOutagesDto {
   type: OutageType;
 
   @ApiProperty({
-    description: 'Inclusive ISO-8601 timestamp marking the start of the search window.',
+    description:
+      'Inclusive ISO-8601 timestamp marking the start of the search window.',
     format: 'date-time',
     example: '2025-01-15T00:00:00.000Z',
   })
@@ -53,7 +54,8 @@ export class QueryOutagesDto {
   start: string;
 
   @ApiProperty({
-    description: 'Inclusive ISO-8601 timestamp marking the end of the search window.',
+    description:
+      'Inclusive ISO-8601 timestamp marking the end of the search window.',
     format: 'date-time',
     example: '2025-01-15T01:00:00.000Z',
   })

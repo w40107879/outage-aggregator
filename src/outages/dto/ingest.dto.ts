@@ -35,9 +35,15 @@ export class IngestDto {
 }
 
 export class IngestResponseDto {
-  @ApiProperty({ description: 'Indicates the request succeeded.', example: true })
+  @ApiProperty({
+    description: 'Indicates the request succeeded.',
+    example: true,
+  })
   ok: boolean;
 
-  @ApiProperty({ description: 'True when the sample is queued for processing.', example: true })
+  @ApiProperty({
+    description: 'True when the sample is queued for processing.',
+    example: true,
+  })
   queued: boolean;
 }
