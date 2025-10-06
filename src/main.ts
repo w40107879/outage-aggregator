@@ -1,3 +1,4 @@
+import helmet from 'helmet';
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { ValidationPipe } from '@nestjs/common';
@@ -8,6 +9,7 @@ import { BigIntSerializerInterceptor } from './common/interceptors/bigint-serial
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+  app.use(helmet());
   app.useGlobalInterceptors(new BigIntSerializerInterceptor());
   app.useGlobalPipes(
     new ValidationPipe({
