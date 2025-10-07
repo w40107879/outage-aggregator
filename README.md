@@ -7,6 +7,10 @@ A NestJS service that ingests raw controller outage telemetry, aggregates consec
 - **API**: NestJS (HTTP + RabbitMQ microservice).
 - **Persistence**: PostgreSQL via Prisma ORM. Raw events are stored idempotently and aggregated into `aggregated_outages`.
 - **Messaging**: RabbitMQ fan-out queue `outage.raw` for asynchronous ingestion. Default gap between samples is **60 minutes** (`GAP_MINUTES`).
+
+#### Why RabbitMQ?
+
+Controller readings can arrive in bursts or late relative to one another, so the service pushes them into RabbitMQ rather than processing them inline on the HTTP thread. This queue smooths out ingest spikes, lets the API respond quickly, and enables the consumer (`IngestConsumer`) to retry transient failures without losing data. It also keeps the door open for additional producers or consumers to be added later (for example, analytics or alerting pipelines) without reshaping the API surface.
 - **Services**: `IngestController` enqueues raw events, `IngestConsumer` performs aggregation, `OutagesController` exposes queries.
 
 ### Aggregation Highlights
@@ -18,13 +22,28 @@ A NestJS service that ingests raw controller outage telemetry, aggregates consec
 
 ## Getting Started
 
-### Prerequisites
+### Quick Start (Docker)
 
-- Node.js 20+
-- PNPM 9+
-- Docker (for PostgreSQL and RabbitMQ)
+Use this path if you want to run the service entirely inside containers using the provided `Dockerfile`.
 
-### Setup
+1. Copy and adjust environment variables if needed (Docker reads from the same file):
+   ```bash
+   cp .env.example .env
+   ```
+2. Build and start the stack:
+   ```bash
+   docker compose up -d
+   ```
+3. API and queue endpoints will be available at:
+   - `http://localhost:3000` for HTTP requests
+   - `localhost:5432` for PostgreSQL
+   - `amqp://guest:guest@localhost:5672` for RabbitMQ
+
+Stop the stack with `docker compose down` (add `-v` to drop the database volume).
+
+### Local Development (PNPM)
+
+Prefer this path if you want to iterate locally with hot reload.
 
 1. Copy the environment file and adjust if needed:
    ```bash
@@ -32,7 +51,7 @@ A NestJS service that ingests raw controller outage telemetry, aggregates consec
    ```
 2. Start infrastructure:
    ```bash
-   docker compose up -d
+   docker compose up -d db rabbit
    ```
 3. Apply the Prisma schema:
    ```bash
@@ -95,3 +114,11 @@ OpenAPI documentation is available in [`docs/openapi.yaml`](docs/openapi.yaml). 
 - Duplicate raw samples can be received; they are ignored after the first successful aggregation.
 - `RABBITMQ_URL` must be configured in non-development environments; the application fails fast when it is missing.
 - Docker compose provides local infrastructure only; adjust credentials before deploying elsewhere.
+
+## Public Platform
+
+- Render (API) — free instances spin down when idle, so the first request after downtime can take 50+ seconds.
+- Neon (PostgreSQL)
+- CloudAMQP (RabbitMQ)
+
+Live Swagger docs: https://outage-aggregator.onrender.com/docs

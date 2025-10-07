@@ -1,5 +1,22 @@
 version: '3.9'
 services:
+  api:
+    build:
+      context: .
+    container_name: outage-api
+    restart: always
+    depends_on:
+      - db
+      - rabbit
+    environment:
+      PORT: 3000
+      NODE_ENV: production
+      DATABASE_URL: postgresql://postgres:postgres@db:5432/outages?schema=public
+      RABBITMQ_URL: amqp://guest:guest@rabbit:5672
+      RABBITMQ_QUEUE: outage.raw
+      GAP_MINUTES: 60
+    ports:
+      - '3000:3000'
   db:
     image: postgres:16
     container_name: outage-postgres
